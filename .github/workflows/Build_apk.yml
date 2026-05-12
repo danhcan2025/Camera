@@ -30,7 +30,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Debug APK
-        run: flutter build apk --debug --verbose # Thêm verbose để theo dõi log chi tiết nếu có lỗi
+        run: flutter build apk --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
