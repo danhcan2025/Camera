@@ -1,0 +1,40 @@
+name: Flutter Build APK
+
+on:
+  push:
+    branches: [ "main", "master" ] # Tự động build khi bạn push code
+  workflow_dispatch: # Cho phép bạn bấm nút build thủ công
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17' # Ép về Java 17 để khớp với Gradle của Flutter
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Fix Permissions
+        run: chmod +x android/gradlew # Dứt điểm lỗi Permission denied
+
+      - name: Build Debug APK
+        run: flutter build apk --debug # Build bản debug để bạn dùng ngay không cần key
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Camera-App-Debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          
